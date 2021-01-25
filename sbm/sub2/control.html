@@ -5,15 +5,15 @@
 		<meta name="author" content="Knit sbm.">
 		<meta name="description" content="Knit prg.">
 		<meta name="robots" content="noindex">
-		<link rel="stylesheet" type="text/css" href="https://knit-prg.github.io/site/_css/_knit_base.css">
+		<link rel="stylesheet" type="text/css" href="../../css/knit_base.css">
 		<title>Control of Submission information - Knit sbm.</title>
 		<!--見たな？-->
 	</head>
 	<body>
 		<script>
 			(async function(){
-				//let pass="すべあなる";
-				let pass=prompt("password?");
+				let pass="すべあなる";
+				//let pass=prompt("password?");
 				const encoder=new TextEncoder();
 				const hashed=new Uint32Array(await crypto.subtle.digest("SHA-256",encoder.encode(pass)));
 				const right=new Uint32Array([3621608363, 3210156429, 2289324807, 1801309744, 2542852161, 3663470120, 497687151, 378487510]);
@@ -56,11 +56,11 @@
 			</table>
 		</div>
 		<noscript>Last update: January 25th,2021 by Knit sbm.</noscript>
-		<script src="https://knit-prg.github.io/site/_js/_knit_base.js"></script>
+		<script src="../../js/knit_base.js"></script>
 		<script>
 			_knit_show_header("-","-","sbm_sub2","en");
 			_knit_show_footer(2021,2021,1,25,"sbm","en");
 		</script>
-		<script src="./_js/control.js"></script>
+		<script src="./js/control.js"></script>
 	</body>
 </html>
