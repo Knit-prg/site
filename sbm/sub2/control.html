@@ -12,8 +12,7 @@
 	<body>
 		<script>
 			(async function(){
-				let pass="すべあなる";
-				//let pass=prompt("password?");
+				let pass=prompt("password?");
 				const encoder=new TextEncoder();
 				const hashed=new Uint32Array(await crypto.subtle.digest("SHA-256",encoder.encode(pass)));
 				const right=new Uint32Array([3621608363, 3210156429, 2289324807, 1801309744, 2542852161, 3663470120, 497687151, 378487510]);
@@ -30,37 +29,42 @@
 			<div>The number of items:<span id="number_display">0</span></div>
 			<table border id="main_table">
 				<tr><td>Input</td><td>Output</td><td>Functions</td></tr>
-				<tr>
+				<tr id="item_0">
 					<td>
-						<div>URL:<input type="url"></div>
+						<div>URL:<input type="url" id="url_0"></div>
+						<div><input type="radio" name="release_type_0" value="normal" checked>Normal<input type="radio" name="release_type_0" value="premiere">Premiere</div>
+						<div><input type="radio" name="release_type_0" value="premiered">Premiered</div>
+						<div><input type="radio" name="release_type_0" value="new_imitation">New imitation<input type="radio" name="release_type_0" value="imitation_name_change">Imitation name change</div>
 						<div>Type</div>
-						<div>
-							<div><input type="radio" name="type" checked>Normal<input type="radio" name="type">Imitation</div>
-							<div><input type="radio" name="type">Arrange<input type="radio" name="type">Subeana Arrange</div>
-							<div><input type="radio" name="type">Imitate Arrange<input type="radio" name="type">Self-appointed</div>
-							<div><input type="radio" name="type">Deleted</div>
-						</div>
-						<div>
-							<div><input type="radio" name="type">New imitation<input type="radio" name="type">Imitation name change</div>
-						</div>
+						<div><input type="radio" name="type_0" value="normal" checked>Normal<input type="radio" name="type_0" value="imitation">Imitation</div>
+						<div><input type="radio" name="type_0" value="arrange">Arrange<input type="radio" name="type_0" value="subeana_arrange">Subeana Arrange</div>
+						<div><input type="radio" name="type_0" value="imitation_arrange">Imitation Arrange<input type="radio" name="type_0" value="self_appointed">Self-appointed</div>
+						<div><input type="radio" name="type_0" value="joke">Joke<input type="radio" name="type_0" value="deleted">Deleted</div>
 					</td>
-					<td></td>
+					<td id="result_0"></td>
 					<td>
 						<div><button id="">Add the new on this</button></div>
 						<div><button>Delete this</button></div>
 						<div><button>Raise this</button></div>
 						<div><button>Lower this</button></div>
 						<div><button>Copy this</button></div>
+						<div><button id="">Add the new below this</button></div>
 					</td>
 				</tr>
 			</table>
 		</div>
-		<noscript>Last update: January 25th,2021 by Knit sbm.</noscript>
+		<noscript>Last update: January 26th,2021 by Knit sbm.</noscript>
 		<script src="../../js/knit_base.js"></script>
 		<script>
 			_knit_show_header("-","-","sbm_sub2","en");
-			_knit_show_footer(2021,2021,1,25,"sbm","en");
+			_knit_show_footer(2021,2021,1,26,"sbm","en");
 		</script>
 		<script src="./js/control.js"></script>
+		<script>
+			onload=function(){
+				init("0");
+				load("","0",false);
+			}
+		</script>
 	</body>
 </html>
