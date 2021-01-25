@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="jp">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="author" content="Knit sbm.">
+		<meta name="description" content="Knit prg.">
+		<meta name="robots" content="noindex">
+		<link rel="stylesheet" type="text/css" href="../../_css/_knit_base.css">
+		<title>Control of Submission information - Knit sbm.</title>
+		<!--見たな？-->
+	</head>
+	<body>
+		<script>
+			(async function(){
+				//let pass="すべあなる";
+				let pass=prompt("password?");
+				const encoder=new TextEncoder();
+				const hashed=new Uint32Array(await crypto.subtle.digest("SHA-256",encoder.encode(pass)));
+				const right=new Uint32Array([3621608363, 3210156429, 2289324807, 1801309744, 2542852161, 3663470120, 497687151, 378487510]);
+				for(let i=0;i<8;i++){
+					if(hashed[i]!=right[i]){
+						location.href="error.html";
+					}
+				}
+			})();
+		</script>
+		<noscript>-Knit-sbm_sub2.</noscript>
+		<div id="_knit_content_wrapper">
+			<div id="_knit_path"><a href="control.html">Control of Submission information</a></div>
+			<div>The number of items:<span id="number_display">0</span></div>
+			<table border id="main_table">
+				<tr><td>Input</td><td>Output</td><td>Functions</td></tr>
+				<tr>
+					<td>
+						<div>URL:<input type="url"></div>
+						<div>Type</div>
+						<div>
+							<div><input type="radio" name="type" checked>Normal<input type="radio" name="type">Imitation</div>
+							<div><input type="radio" name="type">Arrange<input type="radio" name="type">Subeana Arrange</div>
+							<div><input type="radio" name="type">Imitate Arrange<input type="radio" name="type">Self-appointed</div>
+							<div><input type="radio" name="type">Deleted</div>
+						</div>
+						<div>
+							<div><input type="radio" name="type">New imitation<input type="radio" name="type">Imitation name change</div>
+						</div>
+					</td>
+					<td></td>
+					<td>
+						<div><button id="">Add the new on this</button></div>
+						<div><button>Delete this</button></div>
+						<div><button>Raise this</button></div>
+						<div><button>Lower this</button></div>
+						<div><button>Copy this</button></div>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<noscript>Last update: January 25th,2021 by Knit sbm.</noscript>
+		<script src="../../_js/_knit_base.js"></script>
+		<script>
+			_knit_show_header("-","-","sbm_sub2","en");
+			_knit_show_footer(2021,2021,1,25,"sbm","en");
+		</script>
+		<script src="./_js/control.js"></script>
+	</body>
+</html>

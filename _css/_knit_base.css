@@ -1,0 +1,109 @@
+@keyframes _knit_slow_blink{
+	0%{opacity:1;}
+	100%{opacity:0;}
+}
+@keyframes _knit_scroll{
+	0%{transform:translateX(100vw);}
+	100%{transform:translateX(-100%);}
+}
+@keyframes _knit_pulsation{
+	0%{
+		opacity:1;
+	}
+	100%{
+		opacity:0.5;
+	}
+}
+body{
+	display:flex;
+	flex-direction:column;
+	min-height:100vh;
+	margin:0;
+	overflow:hidden;
+}
+header{
+	background-color:black;
+	color:white;
+}
+footer{
+	background-color:lightgray;
+	color:dimgray;
+	text-align:center;
+	border-top:solid 2px dimgray;
+	margin-top:auto;
+}
+noscript{text-align:center;}
+a:link{
+	background-color:black;
+	color:cyan;
+}
+a:visited{color:plum;}
+a:hover{
+	background-color:cyan;
+	color:black;
+	transition:color 0.5s ease-in-out,background-color 0.5s ease-in-out;
+}
+a:active{
+	color:red;
+	transition:color 0s ease-in-out,background-color 0s ease-in-out;
+}
+h1{
+	font-size:250%;
+	text-align:center;
+	margin:0;
+}
+li{
+	background-color:powderblue;
+	padding:0.5em;
+	margin:0.25em;
+	border-radius:10px;
+}
+footer div a:link{
+	background-color:rgba(0,0,0,0);
+	color:blue;
+}
+footer div a:visited{color:blue;}
+footer div a:hover{color:black;}
+footer div a:active{color:red;}
+#_knit_header_top_line{
+	position:absolute;
+	top:0px;
+	width:100vw;
+	height:2em;
+	animation:_knit_pulsation 4s ease-in-out 0s infinite alternate;
+	transition:background-color 7.5s ease-in-out;
+}
+#_knit_header_top_line._knit_\#\#\#{background-color:gray;}
+#_knit_header_top_line._knit_FAKE\!{background-color:red;}
+#_knit_header_top_line._knit_prg{background-color:purple;}
+#_knit_header_top_line._knit_prg:hover{background-color:hotpink;}
+#_knit_header_top_line._knit_sbm_sub2{background-color:dimgray;}
+#_knit_header_top_line._knit_sbm_sub2:hover{background-color:black;}
+#_knit_header_top_text{
+	display:inline-block;
+	animation:_knit_scroll 20s linear infinite;
+	position:absolute;
+	top:0;
+	white-space:nowrap;
+}
+#_knit_header_name{
+	font-size:2.5em;
+	text-align:center;
+	font-weight:bold;
+	padding-top:0.5em;
+}
+#_knit_header_firstname{
+	font-size:2em;
+	vertical-align:bottom;
+}
+#_knit_header_period{animation:_knit_slow_blink 4s ease-in-out 0s infinite alternate;}
+#_knit_content_wrapper{
+	margin:1em;
+	margin-top:0;
+}
+#_knit_path{color:gray;}
+#_knit_path a{
+	color:gray;
+	background-color:rgba(0,0,0,0);
+}
+._knit_purple_box{border:solid 3px purple;}
