@@ -1,21 +1,78 @@
+const tr=`
+	<tr id="item_0">
+		<td>
+			<div>URL:<input type="url" id="url_*" placeholder="URL"></div>
+			<div><input type="radio" name="release_type_*" value="normal" checked>Normal<input type="radio" name="release_type_*" value="premiere">Premiere</div>
+			<div><input type="radio" name="release_type_*" value="premiered">Premiered<input type="radio" name="release_type_*" value="live">Live</div>
+			<div><input type="radio" name="release_type_*" value="new_imitation">New imitation<input type="radio" name="release_type_*" value="imitation_name_change">Imitation name change</div>
+			<div>Type</div>
+			<div><input type="radio" name="type_*" value="normal" checked>Normal<input type="radio" name="type_*" value="imitation">Imitation</div>
+			<div><input type="radio" name="type_*" value="arrange">Arrange<input type="radio" name="type_*" value="subeana_arrange">Subeana Arrange</div>
+			<div><input type="radio" name="type_*" value="imitation_arrange">Imitation Arrange<input type="radio" name="type_*" value="self_appointed">Self-appointed</div>
+			<div><input type="radio" name="type_*" value="joke">Joke<input type="radio" name="type_*" value="deleted">Deleted</div>
+			<div>Details</div>
+			<div>Premiere start time:<input type="datetime-local" id="premiere_start_time_*"></div>
+			<div>Imitation old name:<input id="old_name_*" placeholder="The old name"></div>
+		</td>
+		<td id="result_*"></td>
+		<td>
+			<div><button>Add the new on this</button></div>
+			<div><button>Delete this</button></div>
+			<div><button>Raise this</button></div>
+			<div><button>Lower this</button></div>
+			<div><button id="copy_*">Copy this</button></div>
+			<div><button id="">Add the new below this</button></div>
+		</td>
+	</tr>
+`;
 let loaded_list={};
 let loaded_channel_list={};
-let number=1;
-let next_id=1;
+let number=0;
+let next_id=0;
+function add(){
+	document.getElementById("main_table").insertAdjacentHTML("beforeend",tr.replaceAll("*",next_id));
+	init(next_id);
+	load(next_id,false);
+	next_id++;
+	number++;
+	display_number();
+}
+function display_number(){
+	document.getElementById("number_display").innerText=number;
+}
 function init(num){
-	document.getElementById("url_"+num).oninput=function(){load(document.getElementById("url_"+num).value,num,true);};
+	document.getElementById("url_"+num).oninput=function(){
+		load(num,true);
+	};
 	const release_type_radio=document.getElementsByName("release_type_"+num);
 	for(let i=0;i<release_type_radio.length;i++){
-		release_type_radio[i].onchange=function(){load(document.getElementById("url_"+num).value,num,false);};
+		release_type_radio[i].onchange=function(){
+			load(num,false);
+		};
 	}
 	const type_radio=document.getElementsByName("type_"+num);
 	for(let i=0;i<type_radio.length;i++){
-		type_radio[i].onchange=function(){load(document.getElementById("url_"+num).value,num,false);};
+		type_radio[i].onchange=function(){
+			load(num,false);
+		};
+	}
+	document.getElementById("premiere_start_time_"+num).onchange=function(){
+		load(num,false);
+	};
+	document.getElementById("old_name_"+num).oninput=function(){
+		load(num,false);
+	};
+	document.getElementById("copy_"+num).onclick=function(){
+		const dummy_textarea=document.getElementById("dummy_textarea");
+		dummy_textarea.value=document.getElementById("result_"+num).innerText.slice(0,-1);
+		dummy_textarea.select();
+		document.execCommand("copy");
 	}
 }
-function load(url,num,is_new_URL){
+function load(num,is_new_URL){
+	let url=document.getElementById("url_"+num).value;
 	if(is_new_URL){
-		if(/(https:\/\/www.)?youtube\.com\/watch\?.*v=(\d|\w|-){11}.*/.test(url)||/(https:\/\/)?youtu\.be\/(\d|\w|-){11}.*/.test(url)){
+		if(/(https:\/\/www\.)?youtube\.com\/watch\?.*v=(\d|\w|-){11}.*/.test(url)||/(https:\/\/)?youtu\.be\/(\d|\w|-){11}.*/.test(url)){
 		if(loaded_list[url.match(/(\d|\w|-){11}/)[0]]==undefined){
 				const data_url="https://www.googleapis.com/youtube/v3/videos?id="+url.match(/(\d|\w|-){11}/)[0]+"&part=snippet&fields=items(id,snippet(publishedAt,title,channelId))&key=AIzaSyCso6tb_OZt75eQ7GrxnLJgMN_EOKdqnbA";
 				const request=new XMLHttpRequest();
@@ -26,7 +83,7 @@ function load(url,num,is_new_URL){
 					loaded_list[url.match(/(\d|\w|-){11}/)[0]]=request.response;
 					let author_id=loaded_list[url.match(/(\d|\w|-){11}/)[0]].items[0].snippet.channelId;
 					if(loaded_channel_list[author_id]==undefined){
-						const channel_url="https://www.googleapis.com/youtube/v3/channels?id="+author_id+"&part=snippet&fields=items/snippet/title&key=AIzaSyCso6tb_OZt75eQ7GrxnLJgMN_EOKdqnbA";
+						const channel_url="https://www.googleapis.com/youtube/v3/channels?id="+author_id+"&part=snippet&fields=items/snippet(title,publishedAt)&key=AIzaSyCso6tb_OZt75eQ7GrxnLJgMN_EOKdqnbA";
 						const request_=new XMLHttpRequest();
 						request_.open("GET",channel_url);
 						request_.responseType="json";
@@ -39,6 +96,19 @@ function load(url,num,is_new_URL){
 				}
 			}
 		}
+		else if(/(https:\/\/www\.)?youtube\.com\/channel\/(\d|\w|-){24}.*/.test(url)){
+			if(loaded_channel_list[url.match(/(\d|\w|-){24}/)[0]]==undefined){
+				const channel_url="https://www.googleapis.com/youtube/v3/channels?id="+url.match(/(\d|\w|-){24}/)[0]+"&part=snippet&fields=items/snippet/title&key=AIzaSyCso6tb_OZt75eQ7GrxnLJgMN_EOKdqnbA";
+				const request=new XMLHttpRequest();
+				request.open("GET",channel_url);
+				request.responseType="json";
+				request.send();
+				request.onload=function(){
+					loaded_channel_list[url.match(/(\d|\w|-){24}/)[0]]=request.response;
+					display(url,num);
+				}
+			}
+		}
 	}
 	display(url,num);
 }
@@ -48,7 +118,16 @@ function display(url,num){
 	let type="normal";
 	let type_text="";
 	let final_text="Error";
-	let inputed_url=url.replace("https://www.youtube.com/watch?v=","https://youtu.be/");
+	let inputed_url=url;
+	inputed_url=url
+		.replace("https://www.youtube.com/watch?v=","https://youtu.be/")
+		.replace("&featured","")
+		.replace("/videos","")
+		.replace("/playlists","")
+		.replace("/community","")
+		.replace("/channels","")
+		.replace("/about","")
+		.replace("/featured","");
 	const release_type_radio=document.getElementsByName("release_type_"+num);
 	for(let i=0;i<release_type_radio.length;i++){
 		if(release_type_radio[i].checked){
@@ -65,12 +144,13 @@ function display(url,num){
 		case "normal":release_type_text="動画公開情報";break;
 		case "premiere":release_type_text="プレミア公開設定情報";break;
 		case "premiered":release_type_text="プレミア公開情報";break;
+		case "live":release_type_text="生配信情報";break;
 		case "new_imitation":release_type_text="新模倣情報";break;
 		case "imitation_name_change":release_type_text="模倣名称変更情報";break;
 		default:release_type_text="Error";break;
 	}
 	switch(release_type){
-		case "normal":case "premiered":
+		case "normal":case "premiere":case "premiered":case "live":
 			switch(type){
 				case "normal":type_text="";break;
 				case "imitation":type_text="(すべあな模倣系)";break;
@@ -85,28 +165,59 @@ function display(url,num){
 			let time,y,mo,d,h,mi,time_jst,title,author_name;
 			try{
 				const movie=loaded_list[url.match(/(\d|\w|-){11}/)[0]].items[0].snippet;
-				time=new Date(movie.publishedAt);
-				y=time.getYear();
+				let time_regulation=((-540)-(new Date().getTimezoneOffset()))*60*1000;
+				time=new Date((new Date(movie.publishedAt))-time_regulation);
+				let y=time.getYear();
 				while(y>=100){y=y-100;}
-				y=("00"+y).slice(-2);
-				mo=("00"+(time.getMonth()+1)).slice(-2);
-				d=("00"+time.getDate()).slice(-2);
-				h=("00"+time.getHours()).slice(-2);
-				mi=("00"+time.getMinutes()).slice(-2);
+				y=("0"+y).slice(-2);
+				mo=("0"+(time.getMonth()+1)).slice(-2);
+				d=("0"+time.getDate()).slice(-2);
+				h=("0"+time.getHours()).slice(-2);
+				mi=("0"+time.getMinutes()).slice(-2);
 				time_jst=y+"."+mo+"."+d+" "+h+":"+mi+" JST";
 				title=movie.title;
 				author_name=loaded_channel_list[movie.channelId].items[0].snippet.title;
 			}
 			catch(e){
+				time_jst="YY.MM.DD hh:mm JST";
+				title="タイトル";
+				author_name="作者";
 			}
-			final_text=release_type_text+type_text+"\n"+time_jst+"\n"+title+"/"+author_name+"\n"+inputed_url;
+			if(release_type=="premiere"){
+				let start_time=new Date(document.getElementById("premiere_start_time_"+num).value);
+				let start_y=start_time.getYear();
+				while(start_y>=100){start_y=start_y-100;}
+				start_y=("0"+start_y).slice(-2);
+				let start_mo=("0"+(start_time.getMonth()+1)).slice(-2);
+				let start_d=("0"+start_time.getDate()).slice(-2);
+				let start_h=("0"+start_time.getHours()).slice(-2);
+				let start_mi=("0"+start_time.getMinutes()).slice(-2);
+				let start_time_text=start_y+"."+start_mo+"."+start_d+" "+start_h+":"+start_mi+" JST";
+				final_text=release_type_text+type_text+"\n設定:"+time_jst+"\n開始:"+start_time_text+"\n"+title+"/"+author_name+"\n"+inputed_url;
+			}
+			else{
+				final_text=release_type_text+type_text+"\n"+time_jst+"\n"+title+"/"+author_name+"\n"+inputed_url;
+			}
 		break;
-		case "premiere":
 		case "new_imitation":
-		final_text=release_type_text+"\n"+inputed_url;
+		let channel_title;
+		try{
+			channel_title=loaded_channel_list[url.match(/(\d|\w|-){24}/)[0]].items[0].snippet.title;
+		}
+		catch(e){
+			channel_title="チャンネル名";
+		}
+		final_text=release_type_text+"\n"+channel_title+"\n"+inputed_url;
 		break;
 		case "imitation_name_change":
-		final_text=release_type_text+"\n"+inputed_url;
+		let channel_title_;
+		try{
+			channel_title_=loaded_channel_list[url.match(/(\d|\w|-){24}/)[0]].items[0].snippet.title;
+		}
+		catch(e){
+			channel_title_="チャンネル名";
+		}
+		final_text=release_type_text+"\n"+document.getElementById("old_name_"+num).value+"\n↓\n"+channel_title_+"\n"+inputed_url;
 		break;
 		default:
 		final_text="Error";

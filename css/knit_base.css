@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap');
 @keyframes _knit_slow_blink{
 	0%{opacity:1;}
 	100%{opacity:0;}
@@ -15,11 +16,12 @@
 	}
 }
 body{
+	font-family:'Noto Sans JP',sans-serif;
 	display:flex;
 	flex-direction:column;
 	min-height:100vh;
 	margin:0;
-	overflow:hidden;
+	overflow-x:hidden;
 }
 header{
 	background-color:black;
@@ -58,6 +60,7 @@ li{
 	margin:0.25em;
 	border-radius:10px;
 }
+textarea{resize:none;}
 footer div a:link{
 	background-color:rgba(0,0,0,0);
 	color:blue;
