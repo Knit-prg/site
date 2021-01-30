@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ja">
+	<script>
+	let start=new Date();
+	let end;
+	</script>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="author" content="Knit sbm.">
+		<meta name="description" content="Knit sbm.">
+		<meta name="keywords" content="Knit sbm.">
+		<meta name="twitter:site" content="@_knit_sbm_sub2">
+		<meta name="robots" content="noindex">
+		<link rel="stylesheet" href="index.css">
+		<link rel="stylesheet" type="text/css" href="../../../../css/knit_base.css">
+		<title>情報一覧検索 - すべあな界隈近郊投稿情報 - Knit sbm.</title>
+	</head>
+	<body>
+		<noscript>-Knit-sbm_sub2.</noscript>
+		<div id="_knit_content_wrapper">
+			<div id="_knit_path"><a href="../../../">Top</a>-><a href="../../">日本語トップ</a>-><a href="../">すべあな界隈近郊投稿情報(全手動)</a>-><a href="./">情報一覧検索</a></div>
+			<form action="index.html" method="get">
+				<fieldset>
+					<legend>公開日時</legend>
+					<label for="release_time_is_now">現在時刻以降:</label>
+					<input id="release_time_is_now" type="checkbox" name="release_time_from" value="now">
+					<label for="release_time_from">前限:</label>
+					<input id="release_time_from" name="release_time_from" type="datetime-local" min="2020-12-24T12:00" step="300">
+					<label for="release_time_to">後限:</label>
+					<input id="release_time_to" name="release_time_to" type="datetime-local" step="300">
+				</fieldset>
+				<fieldset>
+					<legend>公開チャンネル(複数選択可)</legend>
+					<select id="author_name" name="author_name" multiple>
+					</select>
+				</fieldset>
+				<fieldset>
+					<legend>公開種別(複数選択可)</legend>
+					<input id="release_type_normal" type="checkbox" name="release_type" value="normal">
+					<label for="release_type_normal">公開</label>
+					<input id="release_type_premiere" type="checkbox" name="release_type" value="premiere">
+					<label for="release_type_premiere">プレミア公開</label>
+					<input id="release_type_instant_premiere" type="checkbox" name="release_type" value="instant_premiere">
+					<label for="release_type_instant_premiere">インスタントプレミア</label>
+					<input id="release_type_live" type="checkbox" name="release_type" value="live">
+					<label for="release_type_live">生放送</label>
+				</fieldset>
+				<fieldset>
+					<legend>ジャンル(複数選択可)</legend>
+						<input id="genre_imitation" type="checkbox" name="genre" value="imitation">
+						<label for="genre_imitation">すべあな模倣&アレンジ</label>
+						<input id="genre_teiki" type="checkbox" name="genre" value="teiki">
+						<label for="genre_teiki">ネタ動画</label>
+						<input id="genre_other" type="checkbox" name="genre" value="other">
+						<label for="genre_other">その他</label>
+				</fieldset>
+				<input type="submit" value="検索"></input>
+				<input type="reset" value="リセット"></input>
+			</form>
+			<table border>
+				<caption>
+					<div>データベース更新:21.01.30 21:19 JST(更新作業中)</div>
+					<div>該当数:<span id="number"></span></div>
+					<div>読込時間:<span id="seconds"></span>ミリ秒</div>
+					<div>時刻は全て日本時間(JST)です。</div>
+					<div>たまに重大なミスがあります。ご自身でもう一度情報を確認するようお願いします。</div>
+					<div>データベースは手動更新の為、反映に最大で1千年紀かかります。</div>
+				</caption>
+				<tbody id="main">
+					<tr><td>年</td><td>月</td><td>日</td><td>時</td><td>分</td><td>タイトル</td><td>公開チャンネル</td><td>公開種別</td><td>リンク</td></tr>
+					<tr class="small_space"></tr>
+				</tbody>
+			</table>
+			<div id="msg"></div>
+		</div>
+		<script src="data.js"></script>
+		<script src="index.js"></script>
+		<script src="../../../../js/knit_base.js"></script>
+		<script>
+		_knit_show_header("-","-","sbm_sub2","ja");
+		_knit_show_footer(2021,2021,1,30,"sbm","ja");
+		</script>
+	</body>
+</html>

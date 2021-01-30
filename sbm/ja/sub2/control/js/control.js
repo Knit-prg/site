@@ -16,12 +16,12 @@ const tr=`
 		</td>
 		<td id="result_*"></td>
 		<td>
-			<div><button>Add the new on this</button></div>
-			<div><button>Delete this</button></div>
-			<div><button>Raise this</button></div>
-			<div><button>Lower this</button></div>
+			<div><button id="add_on_*">Add the new on this</button></div>
+			<div><button id="delete_*">Delete this</button></div>
+			<div><button id="raise_*">Raise this</button></div>
+			<div><button id="lower_*">Lower this</button></div>
 			<div><button id="copy_*">Copy this</button></div>
-			<div><button id="">Add the new below this</button></div>
+			<div><button id="id_add_below_*">Add the new below this</button></div>
 		</td>
 	</tr>
 `;
@@ -64,7 +64,7 @@ function init(num){
 	};
 	document.getElementById("copy_"+num).onclick=function(){
 		const dummy_textarea=document.getElementById("dummy_textarea");
-		dummy_textarea.value=document.getElementById("result_"+num).innerText.slice(0,-1);
+		dummy_textarea.value=document.getElementById("result_"+num).innerText;
 		dummy_textarea.select();
 		document.execCommand("copy");
 	}

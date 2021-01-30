@@ -1,0 +1,49 @@
+body{
+	background-color:black;
+	color:white;
+}
+form{
+	text-align:center;
+}
+table{
+	text-align:center;
+	margin:auto;
+	border-color:white;
+	border-collapse:collapse;
+}
+caption{
+	font-size:75%;
+}
+td{
+	padding-left:1em;
+	padding-right:1em;
+}
+.table_left{
+	border-right:none;
+}
+.no_border{
+	border-right:none;
+	border-left:none;
+}
+.small_space{
+	height:0.5em;
+}
+.space{
+	height:1.5em;
+}
+.bold{
+	font-style:italic;
+	font-weight:bold;
+}
+.imitation{
+	color:limegreen;
+}
+.teiki{
+	color:tomato;
+}
+.other{
+	color:yellow;
+}
+.link{
+	font-size:75%;
+}
