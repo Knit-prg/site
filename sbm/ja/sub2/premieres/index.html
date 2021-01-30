@@ -1,9 +1,5 @@
 <!doctype html>
 <html lang="ja">
-	<script>
-	let start=new Date();
-	let end;
-	</script>
 	<head>
 		<meta charset="UTF-8">
 		<meta name="author" content="Knit sbm.">
@@ -11,8 +7,8 @@
 		<meta name="keywords" content="Knit sbm.">
 		<meta name="twitter:site" content="@_knit_sbm_sub2">
 		<meta name="robots" content="noindex">
-		<link rel="stylesheet" href="index.css">
 		<link rel="stylesheet" type="text/css" href="../../../../css/knit_base.css">
+		<link rel="stylesheet" type="text/css" href="index.css">
 		<title>情報一覧検索 - すべあな界隈近郊投稿情報 - Knit sbm.</title>
 	</head>
 	<body>
@@ -22,14 +18,17 @@
 			<form action="index.html" method="get">
 				<fieldset>
 					<legend>公開日時</legend>
+					<div>日時入力欄にならない場合は以下のフォーマットに則って入力すると動く可能性があります。</div>
+					<div><span class="lime">(年:西暦4桁)</span>-<span class="lime">(月:2桁)</span>-<span class="lime">(日:2桁)</span>T<span class="lime">(時:2桁)</span>:<span class="lime">(分:2桁)</span></div>
+					<div>(<span class="lime">緑</span>の部分を入力したい日時に沿って置き換えて下さい。)</div>
 					<label for="release_time_is_now">現在時刻以降:</label>
 					<input id="release_time_is_now" type="checkbox" name="release_time_from" value="now">
 					<label for="release_time_from">前限:</label>
-					<input id="release_time_from" name="release_time_from" type="datetime-local" min="2020-12-24T12:00" step="300">
+					<input id="release_time_from" name="release_time_from" type="datetime-local" min="2020-12-24T12:00" step="300">～
 					<label for="release_time_to">後限:</label>
 					<input id="release_time_to" name="release_time_to" type="datetime-local" step="300">
 				</fieldset>
-				<fieldset>
+				<fieldset id="chunnel_selector">
 					<legend>公開チャンネル(複数選択可)</legend>
 					<select id="author_name" name="author_name" multiple>
 					</select>
@@ -57,28 +56,38 @@
 				<input type="submit" value="検索"></input>
 				<input type="reset" value="リセット"></input>
 			</form>
-			<table border>
+			<table border id="main_table">
 				<caption>
-					<div>データベース更新:21.01.30 21:19 JST(更新作業中)</div>
+					<div>データベース更新:21.01.31 04:09 JST</div>
 					<div>該当数:<span id="number"></span></div>
-					<div>読込時間:<span id="seconds"></span>ミリ秒</div>
+					<div>検索(+描画)時間:<span id="seconds"></span>ミリ秒</div>
 					<div>時刻は全て日本時間(JST)です。</div>
 					<div>たまに重大なミスがあります。ご自身でもう一度情報を確認するようお願いします。</div>
+					<div>ミスを発見したら是非御報告をお願いします。</div>
 					<div>データベースは手動更新の為、反映に最大で1千年紀かかります。</div>
+					<div>最新情報は<a href="https://twitter.com/_knit_sbm_sub2">Twitter</a>へ</div>
 				</caption>
 				<tbody id="main">
 					<tr><td>年</td><td>月</td><td>日</td><td>時</td><td>分</td><td>タイトル</td><td>公開チャンネル</td><td>公開種別</td><td>リンク</td></tr>
 					<tr class="small_space"></tr>
 				</tbody>
 			</table>
-			<div id="msg"></div>
+			<div id="msg" class="center"></div>
 		</div>
+		<script src="../../../../js/knit_base.js"></script>
 		<script src="data.js"></script>
 		<script src="index.js"></script>
-		<script src="../../../../js/knit_base.js"></script>
 		<script>
-		_knit_show_header("-","-","sbm_sub2","ja");
-		_knit_show_footer(2021,2021,1,30,"sbm","ja");
+			onload=function(){
+				_knit_show_header("-","-","sbm_sub2","ja");
+				_knit_show_footer(2021,2021,1,30,"sbm","ja");
+				let start=new Date();
+				data_processer();
+				display();
+				shorten();
+				let end=new Date();
+				document.getElementById("seconds").innerText=end-start;
+			}
 		</script>
 	</body>
 </html>

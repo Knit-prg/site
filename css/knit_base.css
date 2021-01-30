@@ -104,7 +104,7 @@ footer div a:active{color:red;}
 	font-size:2em;
 	vertical-align:bottom;
 }
-#_knit_header_period{animation:_knit_slow_blink 4s ease-in-out 0s infinite alternate;}
+#_knit_header_period{animation:_knit_slow_blink 4s ease-in-out 0s infinite alternate;}*/
 #_knit_content_wrapper{
 	margin:1em;
 	margin-top:0;
@@ -113,7 +113,10 @@ footer div a:active{color:red;}
 	margin-top:0.5em;
 	margin-bottom:0.5em;
 }
-#_knit_path{color:gray;}
+#_knit_path{
+	color:gray;
+	margin-left:0.5em;
+}
 #_knit_path a{
 	color:gray;
 	background-color:rgba(0,0,0,0);
@@ -124,3 +127,4 @@ footer div a:active{color:red;}
 	font-size:75%;
 	color:gray;
 }
+.lime{color:lime;}
