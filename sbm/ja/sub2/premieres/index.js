@@ -248,8 +248,9 @@ function display(){
 	}
 	let data=whole_data.concat();
 	if(condition.release_time_from!=0){
-		let data_i=data[i];
+		let data_i;
 		for(let i=0;i<data.length;i++){
+			data_i=data[i];
 			if(condition.release_time_from.getTime()>new Date(data_i[0],data_i[1]-1,data_i[2],data_i[3],data_i[4]).getTime()){
 				data.splice(i,1);
 				i--;
