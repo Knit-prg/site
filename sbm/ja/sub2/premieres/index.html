@@ -60,7 +60,7 @@
 				<caption>
 					<div>データベース更新:21.01.31 04:09 JST</div>
 					<div>該当数:<span id="number"></span></div>
-					<div>検索(+描画)時間:<span id="seconds"></span>ミリ秒</div>
+					<div>検索時間:<span id="seconds"></span>ミリ秒</div>
 					<div>時刻は全て日本時間(JST)です。</div>
 					<div>たまに重大なミスがあります。ご自身でもう一度情報を確認するようお願いします。</div>
 					<div>ミスを発見したら是非御報告をお願いします。</div>
@@ -87,6 +87,7 @@
 				shorten();
 				let end=new Date();
 				document.getElementById("seconds").innerText=end-start;
+				onresize=shorten;
 			}
 		</script>
 	</body>

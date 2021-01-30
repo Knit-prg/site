@@ -18,9 +18,14 @@ td{
 }
 td div{
 	margin:0!important;
-	width:10vw;
 	white-space:nowrap;
+	width:15vw;
 }
+.td_time{width:2vw;}
+.td_title{width:25vw;}
+.td_author{width:10vw;}
+.td_type{width:5vw;}
+.td_link{width:10vw;}
 .table_left{border-right:none;}
 .no_border{
 	border-right:none;
