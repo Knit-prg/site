@@ -234,7 +234,7 @@ function display(url,num){
 				let start_d=("0"+start_time.getDate()).slice(-2);
 				let start_h=("0"+start_time.getHours()).slice(-2);
 				let start_mi=("0"+start_time.getMinutes()).slice(-2);
-				databased="["+start_time.getYear()+","+start_time.getMonth()+1+","+start_time.getDate()+","+start_time.getHours()+","+start_time.getMinutes()+",";
+				databased="["+start_time.getFullYear()+","+(start_time.getMonth()+1)+","+start_time.getDate()+","+start_time.getHours()+","+start_time.getMinutes()+",";
 				let start_time_text=start_y+"."+start_mo+"."+start_d+" "+start_h+":"+start_mi+" JST";
 				final_text=release_type_text+type_text+"\n設定:"+time_jst+"\n開始:"+start_time_text+"\n"+title+"/"+author_name+"\n"+inputed_url;
 			}
