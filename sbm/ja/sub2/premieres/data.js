@@ -405,6 +405,8 @@ let whole_data=[
 	,[2021,1,31,18,45,"暁闇(ぎょうあん)【オリジナル曲】","PeroryitoのNoobチャンネル","premiere","youtube","aFOKI7A18xY"]
 	,[2021,1,31,20,0,"【なんでも許せる人向け界隈MV】新曲どうですか？【SBAN】","すべすべすべえりざべす","premiere","youtube","hZ0UkIArM7c"]
 	,[2021,1,31,20,0,"pakurion(確信)","無定期置き場","premiere","youtube","bpox4wDk5o0"]
+	,[2021,1,31,20,3,"WasaWasa","乆","normal","youtube","0i_Pr54x9_A"]
+	,[2021,1,31,21,3,"ちょっとした曲作り","ファミファロ","live","youtube","XKpNG_88d68"]
 	,[2021,2,1,23,30,"既にあった...？","最定期置き場","premiere","youtube","zbcuj-G5JDo"]
 	,[2021,2,2,0,0,"╌","しずんだずがい","premiere","youtube","_01Lct0C05M"]
 ];

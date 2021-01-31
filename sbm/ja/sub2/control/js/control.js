@@ -14,7 +14,7 @@ const tr=`
 			<div>Premiere start time:<input type="datetime-local" id="premiere_start_time_*"></div>
 			<div>Imitation old name:<input id="old_name_*" placeholder="The old name"></div>
 		</td>
-		<td id="result_*"></td>
+		<td><div id="result_*"></div><div class="database" id="database_*"></div></td>
 		<td>
 			<div><button id="add_on_*">Add the new on this</button></div>
 			<div><button id="delete_*">Delete this</button></div>
@@ -22,7 +22,7 @@ const tr=`
 			<div><button id="lower_*">Lower this</button></div>
 			<div><button id="copy_*">Copy this</button></div>
 			<div><button id="copy_database_*">Copy as database</div>
-			<div><button id="id_add_below_*">Add the new below this</button></div>
+			<div><button id="add_below_*">Add the new below this</button></div>
 		</td>
 	</tr>
 `;
@@ -80,12 +80,31 @@ function init(num){
 		if(document.getElementById("item_"+num).previousElementSibling!=null){
 			document.getElementById("item_"+num).insertAdjacentElement("afterend",document.getElementById("item_"+num).previousElementSibling);
 		}
-	}
+	};
+	document.getElementById("lower_"+num).onclick=function(){
+		if(document.getElementById("item_"+num).nextElementSibling!=null){
+			document.getElementById("item_"+num).insertAdjacentElement("beforebegin",document.getElementById("item_"+num).nextElementSibling);
+		}
+	};
 	document.getElementById("copy_"+num).onclick=function(){
 		const dummy_textarea=document.getElementById("dummy_textarea");
 		dummy_textarea.value=document.getElementById("result_"+num).innerText;
 		dummy_textarea.select();
 		document.execCommand("copy");
+	}
+	document.getElementById("copy_database_"+num).onclick=function(){
+		const dummy_textarea=document.getElementById("dummy_textarea");
+		dummy_textarea.value=document.getElementById("database_"+num).innerText;
+		dummy_textarea.select();
+		document.execCommand("copy");
+	}
+	document.getElementById("add_below_"+num).onclick=function(){
+		document.getElementById("item_"+num).insertAdjacentHTML("afterend",tr.replaceAll("*",next_id));
+		init(next_id);
+		load(next_id,false);
+		next_id++;
+		number++;
+		display_number();
 	}
 }
 function load(num,is_new_URL){
@@ -137,7 +156,10 @@ function display(url,num){
 	let type="normal";
 	let type_text="";
 	let final_text="Error";
+	let databased="error";
 	let inputed_url=url;
+	let platform;
+	if(/.*youtube.*/.test(url)){platform="youtube";}
 	inputed_url=url
 		.replace("https://www.youtube.com/watch?v=","https://youtu.be/")
 		.replace("&featured","")
@@ -193,6 +215,7 @@ function display(url,num){
 				d=("0"+time.getDate()).slice(-2);
 				h=("0"+time.getHours()).slice(-2);
 				mi=("0"+time.getMinutes()).slice(-2);
+				databased="["+time.getFullYear()+","+(time.getMonth()+1)+","+time.getDate()+","+time.getHours()+","+time.getMinutes()+",";
 				time_jst=y+"."+mo+"."+d+" "+h+":"+mi+" JST";
 				title=movie.title;
 				author_name=loaded_channel_list[movie.channelId].items[0].snippet.title;
@@ -211,12 +234,19 @@ function display(url,num){
 				let start_d=("0"+start_time.getDate()).slice(-2);
 				let start_h=("0"+start_time.getHours()).slice(-2);
 				let start_mi=("0"+start_time.getMinutes()).slice(-2);
+				databased="["+start_time.getYear()+","+start_time.getMonth()+1+","+start_time.getDate()+","+start_time.getHours()+","+start_time.getMinutes()+",";
 				let start_time_text=start_y+"."+start_mo+"."+start_d+" "+start_h+":"+start_mi+" JST";
 				final_text=release_type_text+type_text+"\n設定:"+time_jst+"\n開始:"+start_time_text+"\n"+title+"/"+author_name+"\n"+inputed_url;
 			}
 			else{
 				final_text=release_type_text+type_text+"\n"+time_jst+"\n"+title+"/"+author_name+"\n"+inputed_url;
 			}
+			databased+="\""+title+"\",\""+author_name+"\",\"";
+			if(release_type=="premiered"){databased+="premiere";}
+			else{databased+=release_type;}
+			databased+="\",\""+platform+"\",\"";
+			if(platform=="youtube"){databased+=url.match(/(\d|\w|-){11}/)[0];}
+			databased+="\"]"
 		break;
 		case "new_imitation":
 		let channel_title;
@@ -243,4 +273,5 @@ function display(url,num){
 		break;
 	}
 	document.getElementById("result_"+num).innerText=final_text;
+	document.getElementById("database_"+num).innerText=databased;
 }
