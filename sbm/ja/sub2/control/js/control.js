@@ -1,5 +1,5 @@
 const tr=`
-	<tr id="item_0">
+	<tr id="item_*">
 		<td>
 			<div>URL:<input type="url" id="url_*" placeholder="URL"></div>
 			<div><input type="radio" name="release_type_*" value="normal" checked>Normal<input type="radio" name="release_type_*" value="premiere">Premiere</div>
@@ -21,6 +21,7 @@ const tr=`
 			<div><button id="raise_*">Raise this</button></div>
 			<div><button id="lower_*">Lower this</button></div>
 			<div><button id="copy_*">Copy this</button></div>
+			<div><button id="copy_database_*">Copy as database</div>
 			<div><button id="id_add_below_*">Add the new below this</button></div>
 		</td>
 	</tr>
@@ -62,6 +63,24 @@ function init(num){
 	document.getElementById("old_name_"+num).oninput=function(){
 		load(num,false);
 	};
+	document.getElementById("add_on_"+num).onclick=function(){
+		document.getElementById("item_"+num).insertAdjacentHTML("beforebegin",tr.replaceAll("*",next_id));
+		init(next_id);
+		load(next_id,false);
+		next_id++;
+		number++;
+		display_number();
+	};
+	document.getElementById("delete_"+num).onclick=function(){
+		document.getElementById("item_"+num).remove();
+		number--;
+		display_number();
+	};
+	document.getElementById("raise_"+num).onclick=function(){
+		if(document.getElementById("item_"+num).previousElementSibling!=null){
+			document.getElementById("item_"+num).insertAdjacentElement("afterend",document.getElementById("item_"+num).previousElementSibling);
+		}
+	}
 	document.getElementById("copy_"+num).onclick=function(){
 		const dummy_textarea=document.getElementById("dummy_textarea");
 		dummy_textarea.value=document.getElementById("result_"+num).innerText;
