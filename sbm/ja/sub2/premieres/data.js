@@ -398,5 +398,11 @@ let whole_data=[
 	,[2021,1,30,23,53,"？？","Imitate Community","premiere","youtube","DH6CrijCyrM"]
 	,[2021,1,31,0,0,"片道切符握りしめてまた逢おうよ、運命に身を任せ","全て希望の所為です。","premiere","youtube","qsqcxmQY_kk"]
 	,[2021,1,31,1,30,"ように。","雪乃トケル","normal","youtube","bFOUq7CRDco"]
+	,[2021,1,31,12,6,"練習曲です。40","Prince Restru","normal","youtube","Q0Iv-hpCzoM"]
+	,[2021,1,31,12,12,"またまたまたまた又","雑定期置き場","normal","youtube","kQuIAICiC78"]
 	,[2021,1,31,17,0,"あめうぐめ - 焔之神","あめうぐめ","premiere","youtube","tG01w8Si8Eo"]
+	,[2021,1,31,18,3,"？？？？？？？","/すこ。本当にすこ","normal","youtube","SN4KYseCyOE"]
+	,[2021,1,31,18,45,"暁闇(ぎょうあん)【オリジナル曲】","PeroryitoのNoobチャンネル","premiere","youtube","aFOKI7A18xY"]
+	,[2021,2,1,23,30,"既にあった...？","最定期置き場","premiere","youtube","zbcuj-G5JDo"]
+	,[2021,2,2,0,0,"╌","しずんだずがい","premiere","youtube","_01Lct0C05M"]
 ];
