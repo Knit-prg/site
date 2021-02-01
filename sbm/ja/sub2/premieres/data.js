@@ -407,10 +407,10 @@ let whole_data=[
 	,[2021,1,31,20,0,"pakurion(確信)","無定期置き場","premiere","youtube","bpox4wDk5o0"]
 	,[2021,1,31,20,3,"WasaWasa","乆","normal","youtube","0i_Pr54x9_A"]
 	,[2021,1,31,21,3,"ちょっとした曲作り","ファミファロ","live","youtube","XKpNG_88d68"]
-	,[2021,2,1,23,30,"既にあった...？","最定期置き場","premiere","youtube","zbcuj-G5JDo"]
 	,[2021,2,1,19,18,"?","雑定期置き場","normal","undefined",""]
 	,[2021,2,2,22,0,"妹華","全て虞美の所為です。","premiere","youtube","yQSIucCV7xc"]
-	,[2021,2,2,0,0,"今冬だけど夏恋しいよねって歌","雪乃トケル","premiere","undefined",""]
+	,[2021,2,1,23,30,"既にあった...？","最定期置き場","premiere","youtube","zbcuj-G5JDo"]
+	,[2021,2,2,0,0,"今冬だけど夏恋しいよねって歌","雪乃トケル","premiere","youtube","dLdkEpHDMpk"]
 	,[2021,2,2,0,0,"╌","しずんだずがい","premiere","youtube","_01Lct0C05M"]
 	,[2021,2,4,0,0,"湖畔","全て彼等の所為です。","premiere","youtube","z_qRbK4criM"]
 ];
