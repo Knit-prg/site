@@ -1,3 +1,7 @@
+const table=document.getElementById("main");
+const d=document;
+let authors=[];
+let whole_data=[];
 function data_processer(){
 	const w=whole_data;
 	const a=authors
@@ -12,6 +16,9 @@ function data_processer(){
 	a.sort();
 	for(let i=0;i<a.length;i++){
 		d.getElementById("author_name").insertAdjacentHTML("beforeend","<option id='author_select_"+a[i]+"'value='"+a[i]+"'>"+a[i]+"</option>");
+	}
+	if(whole_data[8][11]!=-1){
+
 	}
 }
 d.getElementById("release_time_is_now").onclick=function(){
@@ -179,7 +186,6 @@ function make_table(data){
 	return text;
 }
 function display(){
-	msg.innerText="検索中";
 	const condition_raw=location.search.substr(1).split("&");
 	let condition={
 		release_time_from:0
@@ -329,18 +335,29 @@ function display(){
 	table.insertAdjacentHTML("beforeend",make_table(data_3));
 	if(location.search=="?release_time_from=&release_time_to="||location.search=="?release_time_to="){history.replaceState("","",location.pathname);}
 	else if(location.search=="?release_time_from=now&release_time_to="){history.replaceState("","",location.pathname+"?release_time_from=now");}
-	d.getElementById("msg").innerText="読込終了";
 }
-async function shorten(){
-	const shorten=document.getElementsByClassName("shorten");
+let short_i=0;
+let shorten_start;
+const ONE_TIME_RUN=50;
+function shorten(){
+	if(short_i==0){shorten_start=new Date();}
+	const shorten_=document.getElementsByClassName("shorten");
+	d.getElementById("progress").innerText="表示調整中("+short_i+"/"+shorten_.length+")";
 	let div,span,result,shorten_i;
-	for(let i=0;i<shorten.length;i++){
-		shorten_i=shorten[i];
-		shorten_i.style.transform="";
+	for(let i=0;i<ONE_TIME_RUN;i++){
+		if(short_i+i==shorten_.length){break;}
+		shorten_i=shorten_[short_i+i];
+		shorten_i.removeAttribute("style");
 		div=shorten_i.offsetWidth;
 		span=shorten_i.children[0].offsetWidth;
 		result=div/span;
-		if(result<1){await shorten_(shorten[i],result);}
+		if(result<1){shorten_i.style.transform="scaleX("+result+")";}
+	}
+	short_i+=ONE_TIME_RUN
+	if(short_i<shorten_.length){requestAnimationFrame(shorten);}
+	else{
+		short_i=0;
+		d.getElementById("display_time").innerText=(new Date()-shorten_start)/1000;
+		d.getElementById("progress").innerText="完了";
 	}
 }
-function shorten_(shorten_i,result){shorten_i.style.transform="scaleX("+result+")";}
