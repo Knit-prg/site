@@ -13,25 +13,40 @@
 		<noscript>-Knit-sbm_sub2.</noscript>
 		<div id="_knit_content_wrapper">
 			<div id="_knit_path"><a href="../../../">Top</a>-><a href="../../">日本語トップ</a>-><a href="../">すべあな界隈近郊投稿情報(全手動)</a>-><a href="./">提案/報告して頂いた機能等のその後</a></div>
-			<ul class="_knit_table_of_contents">
+			<ul class="_knit_table_of_contents" id="index">
 				<div>目次</div>
-				<li><a href="#1">1.知らないです</a></li>
-				<li><a href="#2">2.他の人も情報を追加できるようにするのは如何ですか？</a></li>
+				<li>読込中</li>
 			</ul>
-			<h2><a name="1">1.知らないです</a></h2>
-			<div class="small">ジャンル:その他:こんにちは！！！！</div>
-			<div class="small">日時:2021.01.31 02:15 JST</div>
-			<div class="bold">進捗:初めからこれかよ。</div>
-			<h2><a name="2">2.他の人も情報を追加できるようにするのは如何ですか？</a></h2>
-			<div class="small">ジャンル:新しいページ/機能の提案</div>
-			<div class="small">日時:2021.01.31 11:53 JST</div>
-			<div class="bold">進捗:技術的に可能か要検証。</div>
+			<div id="content">読込中...</div>
 		</div>
 		<noscript>Last update: January 31st,2021 by Knit sbm.</noscript>
 		<script src="../../../../js/knit_base.js"></script>
 		<script>
 		_knit_show_header("-","-","sbm_sub2","ja");
 		_knit_show_footer(2021,2021,1,31,"sbm","ja");
+		onload=function(){
+			let request=new XMLHttpRequest();
+			request.open("GET","https://sheets.googleapis.com/v4/spreadsheets/1RhIN7Pb6keFBT9QKm9bjGCrLcXPregUfuIL84izO6pU/values/site_report_ja!A2:H?key=AIzaSyCso6tb_OZt75eQ7GrxnLJgMN_EOKdqnbA");
+			request.responseType="json";
+			request.onload=function(){
+				const data=request.response.values;
+				let text="";
+				let index="";
+				for(let i=0;i<data.length;i++){
+					text+="<h2><a name='"+(i+1)+"'>"+(i+1)+"."+data[i][4]+"</a></h2>";
+					text+="<div class='small'>ジャンル:"+data[i][2]+"</div>";
+					text+="<div class='small'>投稿日時:"+data[i][0]+"</div>";
+					if(data[i][3]==""){data[i][3]="特になし";}
+					text+="<div class='small'>発生URL:"+data[i][3]+"</div>";
+					if(data[i][5]==undefined){data[i][5]="未回答";}
+					text+="<div class='bold'>回答:"+data[i][5]+"</div>";
+					index+="<li><a href='#"+(i+1)+"'>"+(i+1)+"."+data[i][4]+"</a></li>"
+				}
+				document.getElementById("content").innerHTML=text;
+				document.getElementById("index").innerHTML="<div>目次</div>"+index;
+			};
+			request.send();
+		};
 		</script>
 	</body>
 </html>

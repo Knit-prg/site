@@ -3,30 +3,93 @@ const d=document;
 let authors=[];
 let whole_data=[];
 function data_processer(){
-	const w=whole_data;
-	const a=authors
-	for(let i=0;i<w.length;i++){
-		if(!a.some(item=>item==w[i][6])&&w[i][6]!="反映されていません"){
-			authors.push(w[i][6]);
+	let w=whole_data;
+	const a=authors;
+	const request=new XMLHttpRequest();
+	request.open("GET","https://sheets.googleapis.com/v4/spreadsheets/1RhIN7Pb6keFBT9QKm9bjGCrLcXPregUfuIL84izO6pU/values/sbm_sub2_user_database!B2:J?key=AIzaSyCso6tb_OZt75eQ7GrxnLJgMN_EOKdqnbA");
+	request.responseType="json";
+	d.getElementById("progress").innerText="追加データ読込中";
+	request.onload=function(){
+		let additional_data=request.response.values;
+		d.getElementById("user_update_time").innerText=additional_data[0][8]
+		let add_i;
+		let date_i;
+		for(let i=0;i<additional_data.length;i++){
+			if(additional_data[i][7]!="TRUE"){
+				add_i=new Array(10);
+				if(additional_data[i][0]!=""){
+					date_i=new Date(additional_data[i][0]);
+					add_i[0]=date_i.getFullYear();
+					add_i[1]=date_i.getMonth()+1;
+					add_i[2]=date_i.getDate();
+					add_i[3]=date_i.getHours();
+					add_i[4]=date_i.getMinutes();
+				}
+				add_i[5]=additional_data[i][1];
+				add_i[6]=additional_data[i][2];
+				switch(additional_data[i][3]){
+					case "通常公開":add_i[7]="normal";break;
+					case "プレミア公開":add_i[7]="premiere";break;
+					case "インスタントプレミア":add_i[7]="instant_premiere";break;
+					case "生放送":add_i[7]="live";break;
+					default:add_i[7]="unknown";break;
+				}
+				add_i[8]=additional_data[i][4];
+				switch(add_i[8]){
+					case "youtube":
+						if(/(\d|\w|\-){11}/.test(additional_data[i][5])){add_i[9]=additional_data[i][5].match(/(\d|\w|\-){11}/)[0];}
+						else{add_i[9]=addiional_data[i][5];}
+					break;
+					default:add_i[9]=additional_data[i][5];break;
+				}
+				switch(add_i[9]){
+					case "すべあな模倣系":add_i[10]="imitation";break;
+					case "ネタ系":add_i[10]="joke";break;
+					case "その他":add_i[10]="other";break;
+					default:add_i[10]="";break;
+				}
+				whole_data.push(add_i);
+			}
 		}
-		/*if(w[i][8]=="youtube"&&w[i][9].length!=11){
-			console.warn("This ID may be wrong!\ndatetime:"+w[i][0]+"."+w[i][1]+"."+w[i][2]+" "+w[i][3]+":"+w[i][4]);
-		}*/
+		let this_date;
+		let before_date;
+		for(let i=0;i<w.length;i++){
+			w[i][0]=parseInt(w[i][0]);
+			w[i][1]=parseInt(w[i][1]);
+			w[i][2]=parseInt(w[i][2]);
+			w[i][3]=parseInt(w[i][3]);
+			w[i][4]=parseInt(w[i][4]);
+			w.sort();
+			if(!a.some(item=>item==w[i][6])&&w[i][6]!="反映されていません"){
+				authors.push(w[i][6]);
+			}
+			if(w[i][8]=="youtube"&&w[i][9].length!=11){
+				console.warn("This ID may be wrong!\na.datetime:"+w[i][0]+"."+w[i][1]+"."+w[i][2]+" "+w[i][3]+":"+w[i][4]);
+			}
+		}
+		comp=function(a,b){
+			return new Date(a[0],a[1]-1,a[2],a[3],a[4])-new Date(b[0],b[1]-1,b[2],b[3],b[4]);
+		}
+		w.sort(comp);
+		a.sort();
+		for(let i=0;i<a.length;i++){
+			d.getElementById("author_name").insertAdjacentHTML("beforeend","<option id='author_select_"+a[i]+"'value='"+a[i]+"'>"+a[i]+"</option>");
+		}
+		if(whole_data[8][11]!=-1){
+		}
+		let display_start=new Date();
+		display();
+		d.getElementById("seconds").innerText=(new Date()-start)/1000;
+		shorten();
+		onresize=shorten;
 	}
-	a.sort();
-	for(let i=0;i<a.length;i++){
-		d.getElementById("author_name").insertAdjacentHTML("beforeend","<option id='author_select_"+a[i]+"'value='"+a[i]+"'>"+a[i]+"</option>");
-	}
-	if(whole_data[8][11]!=-1){
-
-	}
+	request.send();
 }
 d.getElementById("release_time_is_now").onclick=function(){
 	const is_now=d.getElementById("release_time_is_now");
 	const from=d.getElementById("release_time_from");
-
 	if(is_now.checked){from.disabled=true;}
-	else{is_now.disabled=false;}
+	else{from.disabled=false;}
 }
 function make_table(data){
 	const border="</td><td>";
@@ -154,10 +217,10 @@ function make_table(data){
 			switch(date_status){
 				case 1:
 					let temp="</td><td class='no_border bold' rowspan='"+date_span_count+"'>"
-					text+="<td class='table_left bold' rowspan='"+date_span_count+"'>"+data_y+temp+data_mo+temp+data_d+temp+data_h+temp+data_mi+"</td>";
+					text+="<td class='table_left bold' rowspan='"+date_span_count+"'><div class='td_time'>"+data_y+"</div>"+temp+data_mo+temp+data_d+temp+data_h+temp+data_mi+"</td>";
 				break;
 				case 2:break;
-				default:text+="<td class='no_border'>"+data_y+no_border+data_mo+no_border+data_d+no_border+data_h+no_border+data_mi+"</td>";break;
+				default:text+="<td class='no_border'><div class='td_time'>"+data_y+no_border+data_mo+no_border+data_d+no_border+data_h+no_border+data_mi+"</td>";break;
 			}
 		}
 		text+="<td class='"+genre+"'><div class='shorten td_title'><span>"+data_i[5]+"</span></div></td>";
