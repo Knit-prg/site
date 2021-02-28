@@ -6,31 +6,28 @@ form{text-align:center;}
 table{
 	text-align:center;
 	margin:auto;
-	border-color:white;
 	border-collapse:collapse;
 }
-caption{
+#data_status{
+	text-align:center;
 	font-size:75%;
 }
 td{
+	border:solid 1px white;
 	padding-left:1em;
 	padding-right:1em;
 }
 td div{
 	margin:0!important;
 	white-space:nowrap;
-	width:15vw;
 }
-.td_time{width:2vw;}
-.td_title{width:25vw;}
-.td_author{width:10vw;}
-.td_type{width:5vw;}
-.td_link{width:10vw;}
-.table_left{border-right:none;}
-.no_border{
-	border-right:none;
-	border-left:none;
-}
+.date_div{width:2.5vw;}
+.right_none{border-right:none;}
+.left_none{border-left:none;}
+.title_div{width:25vw;}
+.channel_div{width:10vw;}
+.type_div{width:5vw;}
+.url_div{width:10vw;}
 .small_space{height:0.5em;}
 .space{height:1.5em;}
 .bold{

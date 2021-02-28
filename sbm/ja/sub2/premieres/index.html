@@ -24,9 +24,9 @@
 					<label for="release_time_is_now">現在時刻以降:</label>
 					<input id="release_time_is_now" type="checkbox" name="release_time_from" value="now">
 					<label for="release_time_from">前限:</label>
-					<input id="release_time_from" name="release_time_from" type="datetime-local" min="2020-12-24T12:00" step="300">～
+					<input id="release_time_from" name="release_time_from" type="datetime-local" min="2020-12-24T12:00">～
 					<label for="release_time_to">後限:</label>
-					<input id="release_time_to" name="release_time_to" type="datetime-local" step="300">
+					<input id="release_time_to" name="release_time_to" type="datetime-local">
 				</fieldset>
 				<fieldset id="chunnel_selector">
 					<legend>公開チャンネル(複数選択可)</legend>
@@ -56,37 +56,33 @@
 				<input type="submit" value="検索"></input>
 				<input type="reset" value="リセット"></input>
 			</form>
-			<table border id="main_table">
-				<caption>
-					<div>データベース更新:<span id="update_time">読込中</span></div>
-					<div>ユーザーデータベース(仮名)更新:<span id="user_update_time">読込中</span></div>
-					<div>該当数:<span id="number">読込中</span></div>
-					<div>データベース取得時間:<span id="get_database_time">読込中</span>秒</div>
-					<div>データ処理時間:<span id="seconds">読込中</span>秒</div>
-					<div>表示調整時間:<span id="display_time">読込中</span>秒</div>
-					<div>読込状況:<span id="progress">無</span></div>
-					<div>時刻は全て日本時間(JST)です。</div>
-					<div>たまに重大なミスがあります。ご自身でもう一度情報を確認するようお願いします。</div>
-					<div>ミスを発見したら是非御報告をお願いします。</div>
-					<div></div>
-					<div>データベースは手動更新の為、反映に最大で1千年紀かかります。</div>
-					<div>最新情報は<a href="https://twitter.com/_knit_sbm_sub2">Twitter</a>へ</div>
-				</caption>
-				<tbody id="main">
-					<tr><td>年</td><td>月</td><td>日</td><td>時</td><td>分</td><td>タイトル</td><td>公開チャンネル</td><td>公開種別</td><td>リンク</td></tr>
-					<tr class="small_space"></tr>
-				</tbody>
-			</table>
+			<div id="data_status">
+				<div>データベース更新:<span id="update_time">読込中</span></div>
+				<div>ユーザーデータベース(仮名)更新:<span id="user_update_time">読込中</span></div>
+				<div>該当数:<span id="number">読込中</span></div>
+				<div>データベース取得時間:<span id="get_database_time">読込中</span>秒</div>
+				<div>データ処理時間:<span id="seconds">読込中</span>秒</div>
+				<div>表示時間:<span id="display_time">読込中</span>秒</div>
+				<div>表示調整時間:<span id="shorten_time">読込中</span>秒</div>
+				<div>読込状況:<span id="progress">無</span></div>
+				<div>時刻は全て日本時間(JST)です。</div>
+				<div>たまに重大なミスがあります。ご自身でもう一度情報を確認するようお願いします。</div>
+				<div>ミスを発見したら是非御報告をお願いします。</div>
+				<div></div>
+				<div>データベースは手動更新の為、反映に最大で1千年紀かかります。</div>
+				<div>最新情報は<a href="https://twitter.com/_knit_sbm_sub2">Twitter</a>へ</div>
+			</div>
+			<div id="table_display">
+			</div>
 		</div>
 		<noscript>Last update: Feburary 5th,2021 by Knit sbm.</noscript>
 		<script src="../../../../js/knit_base.js"></script>
 		<script src="index.js"></script>
 		<script>
-		let start;
 			onload=function(){
 				let get_database_start;
-				_knit_show_header("-","-","sbm_sub2","ja");
-				_knit_show_footer(2021,2021,2,5,"sbm","ja");
+				_knit.show_header("-","-","sbm_sub2","ja");
+				_knit.show_footer(2021,2021,2,5,"sbm","ja");
 				const request=new XMLHttpRequest();
 				request.open("GET","https://sheets.googleapis.com/v4/spreadsheets/1RhIN7Pb6keFBT9QKm9bjGCrLcXPregUfuIL84izO6pU/values/sbm_sub2_database?key=AIzaSyCso6tb_OZt75eQ7GrxnLJgMN_EOKdqnbA");
 				request.responseType="json";
@@ -105,18 +101,19 @@
 					d.getElementById("get_database_time").innerText=(new Date()-get_database_start)/1000;
 					whole_data=request.response.values;
 					d.getElementById("update_time").innerText=whole_data[0][11];
-					start=new Date();
+					let start=new Date();
 					let w=whole_data;
 					for(let i=0;i<w.length;i++){
 						if(i!=0){
 							this_date=new Date(w[i][0],w[i][1]-1,w[i][2],w[i][3],w[i][4]);
 							before_date=new Date(w[i-1][0],w[i-1][1]-1,w[i-1][2],w[i-1][3],w[i-1][4]);
 							if(before_date>this_date){
-								console.warn("original_data_unsort"+"\n"+this_date+w[i][5]);
 							}
 						}
 					}
 					data_processer();
+					d.getElementById("seconds").innerText=(new Date()-start)/1000;
+					onresize=shorten;
 				}
 				request.send();
 			}

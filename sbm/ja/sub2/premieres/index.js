@@ -16,7 +16,7 @@ function data_processer(){
 		let date_i;
 		for(let i=0;i<additional_data.length;i++){
 			if(additional_data[i][7]!="TRUE"){
-				add_i=new Array(10);
+				add_i=new Array(11);
 				if(additional_data[i][0]!=""){
 					date_i=new Date(additional_data[i][0]);
 					add_i[0]=date_i.getFullYear();
@@ -48,23 +48,24 @@ function data_processer(){
 					case "その他":add_i[10]="other";break;
 					default:add_i[10]="";break;
 				}
+				add_i[11]="additional";
 				whole_data.push(add_i);
 			}
 		}
 		let this_date;
 		let before_date;
 		for(let i=0;i<w.length;i++){
-			w[i][0]=parseInt(w[i][0]);
-			w[i][1]=parseInt(w[i][1]);
-			w[i][2]=parseInt(w[i][2]);
-			w[i][3]=parseInt(w[i][3]);
-			w[i][4]=parseInt(w[i][4]);
-			w.sort();
+			//w[i][0]=parseInt(w[i][0]);
+			//w[i][1]=parseInt(w[i][1]);
+			//w[i][2]=parseInt(w[i][2]);
+			//w[i][3]=parseInt(w[i][3]);
+			//w[i][4]=parseInt(w[i][4]);
+			//w.sort();
 			if(!a.some(item=>item==w[i][6])&&w[i][6]!="反映されていません"){
 				authors.push(w[i][6]);
 			}
 			if(w[i][8]=="youtube"&&w[i][9].length!=11){
-				console.warn("This ID may be wrong!\na.datetime:"+w[i][0]+"."+w[i][1]+"."+w[i][2]+" "+w[i][3]+":"+w[i][4]);
+				//console.warn("This ID may be wrong!\na.datetime:"+w[i][0]+"."+w[i][1]+"."+w[i][2]+" "+w[i][3]+":"+w[i][4]);
 			}
 		}
 		comp=function(a,b){
@@ -77,11 +78,7 @@ function data_processer(){
 		}
 		if(whole_data[8][11]!=-1){
 		}
-		let display_start=new Date();
 		display();
-		d.getElementById("seconds").innerText=(new Date()-start)/1000;
-		shorten();
-		onresize=shorten;
 	}
 	request.send();
 }
@@ -92,163 +89,396 @@ d.getElementById("release_time_is_now").onclick=function(){
 	else{from.disabled=false;}
 }
 function make_table(data){
-	const border="</td><td>";
-	const no_border="</div></td><td class='no_border'><div class='td_time'>";
-	const l=data.length;
-	let text="";
-	let date_first="";
-	let date_span="";
-	let author_span="";
-	let genre="";
-	let date_span_count=0;
-	let author_span_count=0;
-	let author_span_count_=0;
-	let the_rest_of_date_span=0;
-	let the_rest_of_author_span=0;
-	let date_status=0;
-	let author_status=0;
-	let remainder=0;
-	let data_i;
-	let data_i_1;
-	let data_ip1;
-	let data_i_j;
-	let data_i_j_1;
-	let data_y=0;
-	let data_mo=0;
-	let data_d=0;
-	let data_h=0;
-	let data_mi=0;
-	let data_author="";
-	let data_genre="";
-	for(let i=0;i<l;i++){
-		data_i=data[i];
-		data_y=data_i[0];
-		data_mo=data_i[1];
-		data_d=data_i[2];
-		data_h=data_i[3];
-		data_mi=data_i[4];
-		data_author=data_i[6]
-		data_genre=data_i[10];
-		if(data_genre==undefined){
-			if(
-				(/全て.*。/.test(data_author)&&data_author!="全てNYの所為です。"&&data_author!="全て無垢の所為です。")
-				||data_author=="全てすべあなの所為です?"
-				||data_author=="全て貴方々の所為だったのですが、"
-				||data_author=="Imitate Community"
-				||data_author=="ファミファロ"
-				||data_author=="一眼"){
-				genre="imitation";
+	let start=new Date();
+	let table=d.createElement("table");
+	let th=table.insertRow(-1);
+	let th_y=d.createElement("th");
+	th_y.appendChild(d.createTextNode("年"));
+	th.appendChild(th_y);
+	let th_mo=d.createElement("th");
+	th_mo.appendChild(d.createTextNode("月"));
+	th.appendChild(th_mo);
+	let th_d=d.createElement("th");
+	th_d.appendChild(d.createTextNode("日"));
+	th.appendChild(th_d);
+	let th_h=d.createElement("th");
+	th_h.appendChild(d.createTextNode("時"));
+	th.appendChild(th_h);
+	let th_mi=d.createElement("th");
+	th_mi.appendChild(d.createTextNode("分"));
+	th.appendChild(th_mi);
+	let th_title=d.createElement("th");
+	th_title.appendChild(d.createTextNode("表題"));
+	th.appendChild(th_title);
+	let th_channel=d.createElement("th");
+	th_channel.appendChild(d.createTextNode("公開チャンネル"));
+	th.appendChild(th_channel);
+	let th_type=d.createElement("th");
+	th_type.appendChild(d.createTextNode("公開種別"));
+	th.appendChild(th_type);
+	let th_url=d.createElement("th");
+	th_url.appendChild(d.createTextNode("URL"));
+	th.appendChild(th_url);
+	let row_i
+	,y_cell,mo_cell,d_cell,h_cell,mi_cell,title_cell,channel_cell,type_cell,url_cell
+	,y_div,mo_div,d_div,h_div,mi_div,title_div,channel_div,type_div,url_div
+	,y_span,mo_span,d_span,h_span,mi_span,title_span,channel_span,type_span,url_span
+	,y,mo,da,h,mi,title,channel,type,url
+	,time_i,time_next,time_before,time_rowspan
+	,channel_rowspan
+	,before_row
+	,space_row;
+	for(let i=0;i<data.length;i++){
+		row_i=table.insertRow(-1);
+		if(i==0){//先頭列
+			time_i=new Date(data[i][0],data[i][1],data[i][2],data[i][3],data[i][4]);
+			time_next=new Date(data[i+1][0],data[i+1][1],data[i+1][2],data[i+1][3],data[i+1][4]);
+			if(time_next-time_i!=0){
+				space_row=table.insertRow(-1);
+				space_row.style.height=Math.log10((time_next-time_i)/900000)+"em";
 			}
-			else if(/.*置き場/.test(data_author)){genre="teiki";}
-			else{genre="other";}
-		}
-		else{
-			switch(data_genre){
-				case "original":genre="other";break;
-				case "imitation":genre="imitation";break;
-				case "teiki":case "joke":genre="teiki";break;
-				default:genre="other";break;
-			}
-		}
-		let i_time=new Date(data_y,data_mo-1,data_d,data_h,data_mi).getTime();
-		if(i+1!=l){
-			data_ip1=data[i+1];
-			if(the_rest_of_date_span==0&&i_time==new Date(data_ip1[0],data_ip1[1]-1,data_ip1[2],data_ip1[3],data_ip1[4]).getTime()){
-				date_span_count=1;
-				while(i_time==new Date(data[i+date_span_count][0],data[i+date_span_count][1]-1,data[i+date_span_count][2],data[i+date_span_count][3],data[i+date_span_count][4]).getTime()){
-					date_span_count++;
-					the_rest_of_date_span++;
-					if(i+date_span_count==l){break;}
+			y_cell=row_i.insertCell(-1);
+			y_div=d.createElement("div");
+			y_span=d.createElement("span");
+			y=d.createTextNode(data[i][0]);
+			y_cell.appendChild(y_div);
+			y_div.appendChild(y_span);
+			y_span.appendChild(y);
+			y_cell.classList.add("right_none");
+			y_div.classList.add("date_div");
+			y_div.classList.add("shorten");
+			mo_cell=row_i.insertCell(-1);
+			mo_div=d.createElement("div");
+			mo_span=d.createElement("span");
+			mo=d.createTextNode(data[i][1]);
+			mo_cell.appendChild(mo_div);
+			mo_div.appendChild(mo_span);
+			mo_span.appendChild(mo);
+			mo_cell.classList.add("left_none");
+			mo_cell.classList.add("right_none");
+			mo_div.classList.add("date_div");
+			mo_div.classList.add("shorten");
+			d_cell=row_i.insertCell(-1);
+			d_div=d.createElement("div");
+			d_span=d.createElement("span");
+			da=d.createTextNode(data[i][2]);
+			d_cell.appendChild(d_div);
+			d_div.appendChild(d_span);
+			d_span.appendChild(da);
+			d_cell.classList.add("left_none");
+			d_cell.classList.add("right_none");
+			d_div.classList.add("date_div");
+			d_div.classList.add("shorten");
+			h_cell=row_i.insertCell(-1);
+			h_div=d.createElement("div");
+			h_span=d.createElement("span");
+			h=d.createTextNode(data[i][3]);
+			h_cell.appendChild(h_div);
+			h_div.appendChild(h_span);
+			h_span.appendChild(h);
+			h_cell.classList.add("left_none");
+			h_cell.classList.add("right_none");
+			h_div.classList.add("date_div");
+			h_div.classList.add("shorten");
+			mi_cell=row_i.insertCell(-1);
+			mi_div=d.createElement("div");
+			mi_span=d.createElement("span");
+			mi=d.createTextNode(data[i][4]);
+			mi_cell.appendChild(mi_div);
+			mi_div.appendChild(mi_span);
+			mi_span.appendChild(mi);
+			mi_cell.classList.add("left_none");
+			mi_div.classList.add("date_div");
+			mi_div.classList.add("shorten");
+			if(time_next-time_i==0){//次の項目が同一時刻=時刻のセルを結合する必要のある列
+				time_rowspan=0;
+				while(time_next-time_i==0){
+					if(i+time_rowspan==data.length-1){break;}
+					time_rowspan++;
+					time_next=new Date(data[i+time_rowspan][0],data[i+time_rowspan][1],data[i+time_rowspan][2],data[i+time_rowspan][3],data[i+time_rowspan][4]);
 				}
-				date_status=1;
+				y_cell.rowSpan=time_rowspan;
+				y_cell.classList.add("bold");
+				mo_cell.rowSpan=time_rowspan;
+				mo_cell.classList.add("bold");
+				d_cell.rowSpan=time_rowspan;
+				d_cell.classList.add("bold");
+				h_cell.rowSpan=time_rowspan;
+				h_cell.classList.add("bold");
+				mi_cell.rowSpan=time_rowspan;
+				mi_cell.classList.add("bold");
 			}
-			else if(the_rest_of_date_span>0){
-				date_status=2;
-				the_rest_of_date_span--;
-			}
-			else{date_status=0;}
-			if(the_rest_of_author_span==0&&data_author==data_ip1[6]){
-				author_span_count=1;
-				author_span_count_=1;
-				while(i+1!=l&&data_author==data[i+author_span_count][6]){
-					author_span_count++;
-					the_rest_of_author_span++;
-					if(i+author_span_count==l){break;}
-				}
-				author_span_count_=author_span_count;
-				for(let j=0;j+1<author_span_count;j++){
-					data_i_j=data[i+j];
-					data_i_j_1=data[i+j+1];
-					remainder=(new Date(data_i_j_1[0],data_i_j_1[1]-1,data_i_j_1[2],data_i_j_1[3],data_i_j_1[4]).getTime()-new Date(data_i_j[0],data_i_j[1]-1,data_i_j[2],data_i_j[3],data_i_j[4]).getTime())/60000;
-						if(remainder>60){author_span_count_++;}
+			title_cell=row_i.insertCell(-1);
+			title_div=d.createElement("div");
+			title_span=d.createElement("span");
+			title=d.createTextNode(data[i][5]);
+			title_cell.appendChild(title_div);
+			title_div.appendChild(title_span);
+			title_span.appendChild(title);
+			title_div.classList.add("title_div");
+			title_div.classList.add("shorten");
+			channel_cell=row_i.insertCell(-1);
+			channel_div=d.createElement("div");
+			channel_span=d.createElement("span");
+			channel=d.createTextNode(data[i][6]);
+			channel_cell.appendChild(channel_div);
+			channel_div.appendChild(channel_span);
+			channel_span.appendChild(channel);
+			channel_div.classList.add("channel_div");
+			channel_div.classList.add("shorten");
+			if(data[i][6]==data[i+1][6]){//次の項目が同一チャンネル=チャンネルのセルを結合する必要のある列
+				channel_rowspan=0;
+				before_row=0;
+				while(data[i][6]==data[i+channel_rowspan][6]){
+					if(i+channel_rowspan==data.length){break;}
+					if(new Date(data[i][0],data[i][1],data[i][2],data[i][3],data[i][4])-new Date(data[i+channel_rowspan][0],data[i+channel_rowspan][1],data[i+channel_rowspan][2],data[i+channel_rowspan][3],data[i+channel_rowspan][4])!=0){
+						before_row++;
 					}
-				author_status=1;
-			}
-			else if(the_rest_of_author_span>0){
-				author_status=2;
-				the_rest_of_author_span--;
-			}
-			else{author_status=0;}
-		}
-		else{
-			if(the_rest_of_date_span>0){date_status=2;}
-			else{date_status=0;}
-			if(the_rest_of_author_span>0){author_status=2;}
-			else{author_status=0;}
-		}
-		if(i!=0){
-			data_i_1=data[i-1];
-			remainder=-(new Date(data_i_1[0],data_i_1[1]-1,data_i_1[2],data_i_1[3],data_i_1[4]).getTime()-i_time)/60000;
-			if(remainder>120){text+="<tr class='space'></tr>";}
-			else if(remainder>60){text+="<tr class='small_space'></tr>";}
-		}
-		text+="<tr>";
-		if(data_mi==0){
-			switch(date_status){
-				case 1:
-					let temp="</div></td><td class='no_border bold' rowspan='"+date_span_count+"'><div class='td_time'>";
-					text+="<td class='table_left bold' rowspan='"+date_span_count+"'><div class='td_time'>"+data_y+temp+data_mo+temp+data_d+temp+data_h+temp+"</div></td>";
-					break;
-					case 2:break;
-					default:text+="<td class='no_border'><div class='td_time'>"+data_y+no_border+data_mo+no_border+data_d+no_border+data_h+no_border+"</div></td>";break;
+					channel_rowspan++;
 				}
+				channel_cell.rowSpan=channel_rowspan+before_row+2;
+				channel_cell.classList.add("bold");
 			}
-		else{
-			switch(date_status){
-				case 1:
-					let temp="</td><td class='no_border bold' rowspan='"+date_span_count+"'>"
-					text+="<td class='table_left bold' rowspan='"+date_span_count+"'><div class='td_time'>"+data_y+"</div>"+temp+data_mo+temp+data_d+temp+data_h+temp+data_mi+"</td>";
-				break;
-				case 2:break;
-				default:text+="<td class='no_border'><div class='td_time'>"+data_y+no_border+data_mo+no_border+data_d+no_border+data_h+no_border+data_mi+"</td>";break;
+			type_cell=row_i.insertCell(-1);
+			type_div=d.createElement("div");
+			type_span=d.createElement("span");
+			type=d.createTextNode(data[i][7]);
+			type_cell.appendChild(type_div);
+			type_div.appendChild(type_span);
+			type_span.appendChild(type);
+			type_div.classList.add("type_div");
+			type_div.classList.add("shorten");
+			url_cell=row_i.insertCell(-1);
+			url_div=d.createElement("div");
+			url_span=d.createElement("span");
+			url_div.classList.add("url_div");
+			url_div.classList.add("shorten");
+		}
+		else if(i==data.length-1){//末尾列
+			if(time_i-time_before!=0){//前と異なる時刻=時刻を表示する必要のある列
+				y_cell=row_i.insertCell(-1);
+				y_div=d.createElement("div");
+				y_span=d.createElement("span");
+				y=d.createTextNode(data[i][0]);
+				y_cell.appendChild(y_div);
+				y_div.appendChild(y_span);
+				y_span.appendChild(y);
+				y_cell.classList.add("right_none");
+				y_div.classList.add("date_div");
+				y_div.classList.add("shorten");
+				mo_cell=row_i.insertCell(-1);
+				mo_div=d.createElement("div");
+				mo_span=d.createElement("span");
+				mo=d.createTextNode(data[i][1]);
+				mo_cell.appendChild(mo_div);
+				mo_div.appendChild(mo_span);
+				mo_span.appendChild(mo);
+				mo_cell.classList.add("left_none");
+				mo_cell.classList.add("right_none");
+				mo_div.classList.add("date_div");
+				mo_div.classList.add("shorten");
+				d_cell=row_i.insertCell(-1);
+				d_div=d.createElement("div");
+				d_span=d.createElement("span");
+				da=d.createTextNode(data[i][2]);
+				d_cell.appendChild(d_div);
+				d_div.appendChild(d_span);
+				d_span.appendChild(da);
+				d_cell.classList.add("left_none");
+				d_cell.classList.add("right_none");
+				d_div.classList.add("date_div");
+				d_div.classList.add("shorten");
+				h_cell=row_i.insertCell(-1);
+				h_div=d.createElement("div");
+				h_span=d.createElement("span");
+				h=d.createTextNode(data[i][3]);
+				h_cell.appendChild(h_div);
+				h_div.appendChild(h_span);
+				h_span.appendChild(h);
+				h_cell.classList.add("left_none");
+				h_div.classList.add("date_div");
+				h_div.classList.add("shorten");
+				h_cell.classList.add("right_none");
+				mi_cell=row_i.insertCell(-1);
+				mi_div=d.createElement("div");
+				mi_span=d.createElement("span");
+				mi=d.createTextNode(data[i][4]);
+				mi_cell.appendChild(mi_div);
+				mi_div.appendChild(mi_span);
+				mi_span.appendChild(mi);
+				mi_cell.classList.add("left_none");
+				mi_div.classList.add("date_div");
+				mi_div.classList.add("shorten");
 			}
+			title_cell=row_i.insertCell(-1);
+			title_div=d.createElement("div");
+			title_span=d.createElement("span");
+			title=d.createTextNode(data[i][5]);
+			title_cell.appendChild(title_div);
+			title_div.appendChild(title_span);
+			title_span.appendChild(title);
+			title_div.classList.add("title_div");
+			title_div.classList.add("shorten");
+			if(data[i][6]!=data[i-1][6]){//前と異なるチャンネル名=チャンネル名を表示する必要のある列
+				channel_cell=row_i.insertCell(-1);
+				channel_div=d.createElement("div");
+				channel_span=d.createElement("span");
+				channel=d.createTextNode(data[i][6]);
+				channel_cell.appendChild(channel_div);
+				channel_div.appendChild(channel_span);
+				channel_span.appendChild(channel);
+				channel_div.classList.add("channel_div");
+				channel_div.classList.add("shorten");
+			}
+			type_cell=row_i.insertCell(-1);
+			type_div=d.createElement("div");
+			type_span=d.createElement("span");
+			type=d.createTextNode(data[i][7]);
+			type_cell.appendChild(type_div);
+			type_div.appendChild(type_span);
+			type_span.appendChild(type);
+			type_div.classList.add("type_div");
+			type_div.classList.add("shorten");
+			url_cell=row_i.insertCell(-1);
+			url_div=d.createElement("div");
+			url_span=d.createElement("span");
+			url_div.classList.add("url_div");
+			url_div.classList.add("shorten");
 		}
-		text+="<td class='"+genre+"'><div class='shorten td_title'><span>"+data_i[5]+"</span></div></td>";
-		switch(author_status){
-			case 1:text+="<td class='bold "+genre+"' rowspan='"+author_span_count_+"'><div class='shorten td_author'><span>"+data_author+"</span></div></td>";
-			break;
-			case 2:break;
-			default:text+="<td class='"+genre+"'><div class='shorten td_author'><span>"+data_author+"</span></div></td>";break;
-		}
-		text+="<td><div class='shorten td_type'><span>";
-		switch(data_i[7]){
-			case "premiere":text+="プレミア公開";break;
-			case "instant_premiere":text+="インスタントプレミア";break;
-			case "normal":text+="公開";break;
-			case "live":text+="生放送";break;
-			case "announce":text+="お知らせ";break;
-			default:text+="不明";break;
-		}
-		text+="</span></div></td>";
-		switch(data_i[8]){
-			case "youtube":text+="<td class='link'><div class='shorten td_link'><span><a href='https://youtu.be/"+data_i[9]+"'>https://youtu.be/"+data_i[9]+"</a></span></div></td></tr>";break;
-			default:break;
+		else{//先頭と末尾以外
+			time_i=new Date(data[i][0],data[i][1],data[i][2],data[i][3],data[i][4]);
+			time_next=new Date(data[i+1][0],data[i+1][1],data[i+1][2],data[i+1][3],data[i+1][4]);
+			time_before=new Date(data[i-1][0],data[i-1][1],data[i-1][2],data[i-1][3],data[i-1][4]);
+			if(time_next-time_i!=0){
+				space_row=table.insertRow(-1);
+				space_row.style.height=Math.log10((time_next-time_i)/900000)+"em";
+			}
+			if(time_i-time_before!=0){//前と異なる時刻=時刻を表示する必要のある列
+				y_cell=row_i.insertCell(-1);
+				y_div=d.createElement("div");
+				y_span=d.createElement("span");
+				y=d.createTextNode(data[i][0]);
+				y_cell.appendChild(y_div);
+				y_div.appendChild(y_span);
+				y_span.appendChild(y);
+				y_cell.classList.add("right_none");
+				y_div.classList.add("date_div");
+				y_div.classList.add("shorten");
+				mo_cell=row_i.insertCell(-1);
+				mo_div=d.createElement("div");
+				mo_span=d.createElement("span");
+				mo=d.createTextNode(data[i][1]);
+				mo_cell.appendChild(mo_div);
+				mo_div.appendChild(mo_span);
+				mo_span.appendChild(mo);
+				mo_cell.classList.add("left_none");
+				mo_cell.classList.add("right_none");
+				mo_div.classList.add("date_div");
+				mo_div.classList.add("shorten");
+				d_cell=row_i.insertCell(-1);
+				d_div=d.createElement("div");
+				d_span=d.createElement("span");
+				da=d.createTextNode(data[i][2]);
+				d_cell.appendChild(d_div);
+				d_div.appendChild(d_span);
+				d_span.appendChild(da);
+				d_cell.classList.add("left_none");
+				d_cell.classList.add("right_none");
+				d_div.classList.add("date_div");
+				d_div.classList.add("shorten");
+				h_cell=row_i.insertCell(-1);
+				h_div=d.createElement("div");
+				h_span=d.createElement("span");
+				h=d.createTextNode(data[i][3]);
+				h_cell.appendChild(h_div);
+				h_div.appendChild(h_span);
+				h_span.appendChild(h);
+				h_cell.classList.add("left_none");
+				h_div.classList.add("date_div");
+				h_div.classList.add("shorten");
+				h_cell.classList.add("right_none");
+				mi_cell=row_i.insertCell(-1);
+				mi_div=d.createElement("div");
+				mi_span=d.createElement("span");
+				mi=d.createTextNode(data[i][4]);
+				mi_cell.appendChild(mi_div);
+				mi_div.appendChild(mi_span);
+				mi_span.appendChild(mi);
+				mi_cell.classList.add("left_none");
+				mi_div.classList.add("date_div");
+				mi_div.classList.add("shorten");
+			}
+			if(time_next-time_i==0&&time_i-time_before!=0){//次の項目が同一時刻且つ前の項目が同一時刻でない=時刻のセルを結合する必要のある列
+				time_rowspan=0;
+				while(time_next-time_i==0){
+					if(i+time_rowspan==data.length-1){break;}
+					time_rowspan++;
+					time_next=new Date(data[i+time_rowspan][0],data[i+time_rowspan][1],data[i+time_rowspan][2],data[i+time_rowspan][3],data[i+time_rowspan][4]);
+				}
+				y_cell.rowSpan=time_rowspan;
+				y_cell.classList.add("bold");
+				mo_cell.rowSpan=time_rowspan;
+				mo_cell.classList.add("bold");
+				d_cell.rowSpan=time_rowspan;
+				d_cell.classList.add("bold");
+				h_cell.rowSpan=time_rowspan;
+				h_cell.classList.add("bold");
+				mi_cell.rowSpan=time_rowspan;
+				mi_cell.classList.add("bold");
+			}
+			title_cell=row_i.insertCell(-1);
+			title_div=d.createElement("div");
+			title_span=d.createElement("span");
+			title=d.createTextNode(data[i][5]);
+			title_cell.appendChild(title_div);
+			title_div.appendChild(title_span);
+			title_span.appendChild(title);
+			title_div.classList.add("title_div");
+			title_div.classList.add("shorten");
+			if(data[i][6]!=data[i-1][6]){//前と異なるチャンネル名=チャンネル名を表示する必要のある列
+				channel_cell=row_i.insertCell(-1);
+				channel_div=d.createElement("div");
+				channel_span=d.createElement("span");
+				channel=d.createTextNode(data[i][6]);
+				channel_cell.appendChild(channel_div);
+				channel_div.appendChild(channel_span);
+				channel_span.appendChild(channel);
+				channel_div.classList.add("channel_div");
+				channel_div.classList.add("shorten");
+			}
+			if(data[i][6]==data[i+1][6]&&data[i][6]!=data[i-1][6]){//次の項目が同一チャンネル且つ前の項目が同一チャンネルでない=チャンネルのセルを結合する必要のある列
+				channel_rowspan=0;
+				before_row=0;
+				while(data[i][6]==data[i+channel_rowspan][6]){
+					if(i+channel_rowspan==data.length-1){break;}
+					if(new Date(data[i][0],data[i][1],data[i][2],data[i][3],data[i][4])-new Date(data[i+channel_rowspan][0],data[i+channel_rowspan][1],data[i+channel_rowspan][2],data[i+channel_rowspan][3],data[i+channel_rowspan][4])!=0){
+						before_row++;
+					}
+					channel_rowspan++;
+				}
+				channel_cell.rowSpan=channel_rowspan+before_row;
+				channel_cell.classList.add("bold");
+			}
+			type_cell=row_i.insertCell(-1);
+			type_div=d.createElement("div");
+			type_span=d.createElement("span");
+			type=d.createTextNode(data[i][7]);
+			type_cell.appendChild(type_div);
+			type_div.appendChild(type_span);
+			type_span.appendChild(type);
+			type_div.classList.add("type_div");
+			type_div.classList.add("shorten");
+			url_cell=row_i.insertCell(-1);
+			url_div=d.createElement("div");
+			url_span=d.createElement("span");
+			url_div.classList.add("url_div");
+			url_div.classList.add("shorten");
 		}
 	}
-	d.getElementById("number").innerHTML=l;
-	return text;
+	return table;
 }
 function display(){
+	const display_start=new Date();
 	const condition_raw=location.search.substr(1).split("&");
 	let condition={
 		release_time_from:0
@@ -324,6 +554,10 @@ function display(){
 				data.splice(i,1);
 				i--;
 			}
+			else if(new Date(data_i[0],data_i[1]-1,data_i[2],data_i[3],data_i[4]).toString()=="Invalid Date"){
+				data.splice(i,1);
+				i--;
+			}
 		}
 	}
 	if(condition.release_time_to!=0){
@@ -331,6 +565,10 @@ function display(){
 		for(let i=0;i<data.length;i++){
 			data_i=data[i];
 			if(condition.release_time_to.getTime()<new Date(data_i[0],data_i[1]-1,data_i[2],data_i[3],data_i[4]).getTime()){
+				data.splice(i,1);
+				i--;
+			}
+			else if(new Date(data_i[0],data_i[1]-1,data_i[2],data_i[3],data_i[4]).toString()=="Invalid Date"){
 				data.splice(i,1);
 				i--;
 			}
@@ -395,32 +633,32 @@ function display(){
 		}
 	}
 	else{data_3=data_2;}
-	table.insertAdjacentHTML("beforeend",make_table(data_3));
+	d.getElementById("number").innerText=data_3.length;
+	d.getElementById("table_display").appendChild(make_table(data_3));
 	if(location.search=="?release_time_from=&release_time_to="||location.search=="?release_time_to="){history.replaceState("","",location.pathname);}
 	else if(location.search=="?release_time_from=now&release_time_to="){history.replaceState("","",location.pathname+"?release_time_from=now");}
+	d.getElementById("display_time").innerText=(new Date()-display_start)/1000;
+	shorten();
 }
-let short_i=0;
-let shorten_start;
-const ONE_TIME_RUN=50;
 function shorten(){
-	if(short_i==0){shorten_start=new Date();}
-	const shorten_=document.getElementsByClassName("shorten");
-	d.getElementById("progress").innerText="表示調整中("+short_i+"/"+shorten_.length+")";
-	let div,span,result,shorten_i;
-	for(let i=0;i<ONE_TIME_RUN;i++){
-		if(short_i+i==shorten_.length){break;}
-		shorten_i=shorten_[short_i+i];
-		shorten_i.removeAttribute("style");
-		div=shorten_i.offsetWidth;
-		span=shorten_i.children[0].offsetWidth;
+	const shorten_start=new Date();
+	d.getElementById("progress").innerText="表示調整中";
+	let html=d.getElementById("table_display").children[0].cloneNode(true);
+	let list=html.getElementsByClassName("shorten");
+	let list_=d.getElementById("table_display").children[0].getElementsByClassName("shorten");
+	let div,span,result
+	let style="";
+	for(let i=0;i<list.length;i++){
+		list[i].removeAttribute("style");
+		div=list_[i].offsetWidth;
+		span=list_[i].children[0].offsetWidth;
 		result=div/span;
-		if(result<1){shorten_i.style.transform="scaleX("+result+")";}
+		if(result<1){
+			list[i].style.transform="scaleX("+result+")";
+		}
 	}
-	short_i+=ONE_TIME_RUN
-	if(short_i<shorten_.length){requestAnimationFrame(shorten);}
-	else{
-		short_i=0;
-		d.getElementById("display_time").innerText=(new Date()-shorten_start)/1000;
-		d.getElementById("progress").innerText="完了";
-	}
+	d.getElementById("table_display").removeChild(d.getElementById("table_display").firstElementChild)
+	d.getElementById("table_display").appendChild(html);
+	d.getElementById("progress").innerText="完了";
+	d.getElementById("shorten_time").innerText=(new Date()-shorten_start)/1000;
 }
